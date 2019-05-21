@@ -4,7 +4,8 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <form action="{{route('admin.post.store') }}" method="POST">
+            <form action="{{route('admin.post.store') }}" method="POST"
+            enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for=""> Title</label>
@@ -13,6 +14,11 @@
                     <div class="invalid-feedback">
                             {{ $errors->first('title') }}
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="Label">Image</label>
+                    <input type="file" name="image" class="form-control" id="">
                 </div>
                
                 <div class="form-group">

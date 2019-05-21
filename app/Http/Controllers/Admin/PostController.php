@@ -46,9 +46,12 @@ class PostController extends Controller
         ], [
             'required' =>'attribute Harus diisi',
         ]);
+        $imagePath = $request->file('image')->store('post');
 
         $post = new Post;
         $post->title = $request->title;
+        $post->image = $imagePath;
+        $post->slug = str_slug($request->title);
         $post->content = $request->content;
         $post->save();
 
@@ -75,9 +78,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        $post = Post::find($id);
+       // $post = Post::find($id);
 
         return view('admin.post.edit', [
             'post'=>$post,
@@ -91,7 +94,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
         $this->validate($request, [
             'title' => 'required|min:10',
@@ -100,8 +103,9 @@ class PostController extends Controller
             'required' =>'attribute Harus diisi',
         ]);
 
-        $post = Post::find($id);
+       // $post = Post::find($id);
         $post->title = $request->title;
+        $post->slug = str_slug($request->title);
         $post->content = $request->content;
         $post->save();
 
@@ -117,9 +121,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::find($id);
+        //$post = Post::find($id);
 
         $post->delete();
 

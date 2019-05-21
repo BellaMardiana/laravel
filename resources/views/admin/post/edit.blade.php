@@ -26,7 +26,7 @@
                         </div>
                 </div>
 
-                <div class="frorm-group">
+                <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary">
                 </div>
             </form>

@@ -50,10 +50,10 @@ Route::prefix('admin')->middleware('auth')->group(function() {
 
     Route::post('/post', 'Admin\PostController@store')->name('admin.post.store');
 
-    Route::get('/post/{id}/edit', 'Admin\PostController@edit')->name('admin.post.edit');
+    Route::get('/post/{post}/edit', 'Admin\PostController@edit')->name('admin.post.edit');
 
-    Route::put('/post/{id}/edit', 'Admin\PostController@update')->name('admin.post.update');
+    Route::put('/post/{post}/edit', 'Admin\PostController@update')->name('admin.post.update');
 
-    Route::delete('/post/{id}', 'Admin\PostController@destroy')->name('admin.post.destroy');
+    Route::delete('/post/{post}', 'Admin\PostController@destroy')->name('admin.post.destroy');
 
 });

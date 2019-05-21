@@ -10,6 +10,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Title</th>
+                    <th>Image</th>
                     <th>Content</th>
                     <th>Action</th>
                 </tr>
@@ -18,6 +19,7 @@
                 <tr>
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
+                    <td><img src="{{asset($post->image)}}" height="100px" alt=""></td>
                     <td>{{ $post->content }}</td>
                     <td><a href="{{ route('admin.post.edit',$post) }}">Edit</a>
                         <form action="{{ route('admin.post.destroy', $post) }}" method="POST">

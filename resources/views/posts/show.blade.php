@@ -1,6 +1,6 @@
 @extends('templates.default')
 
 @section('content')
-    <h3>{{$posts->title}}</h3>
-    <p>{{$posts->content}}</p>
+    <h3>{{$post->title}}</h3>
+    <p>{{$post->content}}</p>
 @endsection
