@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Post;
+use Illuminate\Support\Facades\Storage;
+use App\Category;
+use App\User;
 
 class PostController extends Controller
 {
@@ -18,7 +21,7 @@ class PostController extends Controller
         $posts = Post::latest()->paginate(10);
 
         return view('admin.post.index', [
-            'posts' => $posts
+            'posts' => $posts,
         ]);
     }
 
@@ -29,7 +32,11 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.post.create');
+        $categories = Category::get();
+
+        return view('admin.post.create',[
+            'categories' => $categories,
+        ]);
     }
 
     /**
@@ -41,14 +48,18 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required|min:10',
-            'content' =>'required|min:10',
+            'title' => 'required',
+            'content' =>'required',
+            'image' => 'image'
         ], [
-            'required' =>'attribute Harus diisi',
+            'required' =>':attribute Harus diisi',
         ]);
+        //auth()->id()
         $imagePath = $request->file('image')->store('post');
 
         $post = new Post;
+        $post->category_id = $request->category;
+        $post->user_id = auth()->id();    
         $post->title = $request->title;
         $post->image = $imagePath;
         $post->slug = str_slug($request->title);
@@ -58,7 +69,7 @@ class PostController extends Controller
         //method create
         //Post::create(request->only('title','content'));
 
-        return redirect()->route('admin.post.index')->with('info','Berhasil ditambahkan');
+        return redirect()->route('admin.post.index')->withSuccess('Berhasil ditambahkan');
     }
 
     /**
@@ -82,8 +93,14 @@ class PostController extends Controller
     {
        // $post = Post::find($id);
 
+       //if (auth()->id() !== $post->user_id){
+          // return 'Kamu tidak berhak';
+       //}
+
+        $this->authorize('update', $post);
+        
         return view('admin.post.edit', [
-            'post'=>$post,
+            'post' => $post,
         ]);
     }
 
@@ -98,19 +115,25 @@ class PostController extends Controller
     {
         $this->validate($request, [
             'title' => 'required|min:10',
-            'content' =>'required|min:10',
+            'content' =>'required|min:10'
         ], [
             'required' =>'attribute Harus diisi',
         ]);
+        //$imagePath = $request->file('image')->store('post');
 
-       // $post = Post::find($id);
-        $post->title = $request->title;
+        //$post = Post::find($id);
+        $post->title = $request->title;  
         $post->slug = str_slug($request->title);
-        $post->content = $request->content;
+        $post->content = $request->content;   
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('post');
+            Storage::delete($post->image);
+            $post->image = $imagePath;
+        }
         $post->save();
 
-        //method create
-        //Post::create(request->only('title','content'));
+        //method Create
+        //Post::create($request->only('title','content'));
 
         return redirect()->route('admin.post.index')->with('info','Berhasil dirubah');
     }
@@ -128,5 +151,16 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()->route('admin.post.index')->with('danger','Berhasil Dihapus');
+    }
+
+    public function showUser (User $user)
+    {
+        $data['user'] = $user;
+        $data['posts'] = $user->posts;
+
+        return view('admin.post.post-by-user', [
+            'user'=> $user,
+            'posts' => $user->posts
+        ]);
     }
 }

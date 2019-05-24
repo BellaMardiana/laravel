@@ -3,15 +3,15 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <a href="{{ route('admin.post.create') }}" class="btn btn-primary">Add Post</a>
+            
         </div>
         <div class="card-body">
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>ID</th>
                     <th>Title</th>
-                    <th>User</th>
                     <th>Image</th>
+                    <th>User</th>
                     <th>Category</th>
                     <th>Content</th>
                     <th>Action</th>
@@ -22,12 +22,10 @@
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
                     <td>
-                        <a href="{{ route('admin.user.post', $post->user) }}">{{$post->user->name}}</a>
+                        {{$post->User->name}}
                     </td>
                     <td><img src="{{asset($post->image)}}" height="100px" alt=""></td>
-                    <td>
-                        <a href="{{ route('admin.category.post', $post->category) }}">{{$post->category->name }}</a>
-                    </td>
+                    <td><a href="{{ route('admin.category.post', $post->category) }}">{{ $post->category->name }}</a></td>
                     <td>{{ $post->content }}</td>
                     <td><a href="{{ route('admin.post.edit',$post) }}">Edit</a>
                         <form action="{{ route('admin.post.destroy', $post) }}" method="POST">
@@ -39,7 +37,6 @@
                 </tr>
                 @endforeach
             </table>
-            {{ $posts->links()}}
         </div>
     </div>
 @endsection
